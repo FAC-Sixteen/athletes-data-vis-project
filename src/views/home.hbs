@@ -12,7 +12,7 @@ console.log("console logging!!!", d3.select("body").data("cereal.csv"));
 
 const margin = {top: 20, right: 60, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
-    height = 1000 - margin.top - margin.bottom;
+    height = 500 - margin.top - margin.bottom;
 
 /* 
  * value accessor - returns the value to encode for a given data object.
@@ -45,9 +45,11 @@ const svg = d3.select("body").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // add the tooltip area to the webpage
+
 const tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
+
 
 // load data
 d3.csv("tennis_boys.csv", function(error, data) {
@@ -97,8 +99,9 @@ d3.csv("tennis_boys.csv", function(error, data) {
       .attr("r", 3.5)
       .attr("cx", xMap)
       .attr("cy", yMap)
-      .style("fill", function(d) { return color(cValue(d));}) 
+      .style("fill", function(d) { return color(cValue(d));})
       .on("mouseover", function(d) {
+
           tooltip.transition()
                .duration(200)
                .style("opacity", .9);
