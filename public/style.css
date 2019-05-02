@@ -19,4 +19,10 @@ body {
   width: 200px;
   height: 28px;
   pointer-events: none;
+  background-color: black;
+  color: white;
+}
+
+svg {
+  overflow: auto;
 }

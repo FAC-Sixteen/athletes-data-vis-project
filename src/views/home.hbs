@@ -5,7 +5,7 @@
 
 d3.select("body").append("p").text("This is the Hello!");
 
-console.log("console logging!!!", d3.select("body").data("cereal.csv"));
+//console.log("console logging!!!", d3.select("body").data("cereal.csv"));
 
 
 
@@ -35,13 +35,13 @@ const yValue = function(d) { return d["Age when Grand Slam won (days)"];}, // da
 
 // setup fill color
 const cValue = function(d) { return d.WINNER;},
-    color = d3.scale.category10();
+    color = d3.scale.category20();
 
 // add the graph canvas to the body of the webpage
 const svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  .append("g")
+    .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // add the tooltip area to the webpage
@@ -140,3 +140,5 @@ d3.csv("tennis_boys.csv", function(error, data) {
 });
 
 </script>
+
+{{> women_tennis}}
