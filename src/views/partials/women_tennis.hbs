@@ -21,7 +21,7 @@ const margin2 = {top: 20, right: 60, bottom: 30, left: 50},
 const xValue2 = function(d) { return d.YEAR;}, // data -> value
     xScale2 = d3.scale.linear().range([0, width2 - 100]), // value -> display
     xMap2 = function(d) { return xScale2(xValue2(d));}, // data -> display
-    xAxis2 = d3.svg.axis().scale(xScale2).orient("bottom");
+    xAxis2 = d3.svg.axis().scale(xScale2).orient("bottom").tickFormat(d3.format("d"));
 
 // setup y
 const yValue2 = function(d) { return d["Age when Grand Slam won (years)"];}, // data -> value
@@ -30,7 +30,7 @@ const yValue2 = function(d) { return d["Age when Grand Slam won (years)"];}, // 
     yAxis2 = d3.svg.axis().scale(yScale2).orient("left");
 
 // setup fill color2
-const cValue2 = function(d) { return d.WINNER;},
+const cValue2 = function(d) { return d.Decade;},
     color2 = d3.scale.category20();
 
 // add the graph canvas to the body of the webpage
