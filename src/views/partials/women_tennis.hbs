@@ -1,0 +1,138 @@
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<script>
+
+d3.select("body").append("p").text("This is the Hello!");
+
+//console.log("console logging!!!", d3.select("body").data("cereal.csv"));
+
+const margin2 = {top: 20, right: 60, bottom: 30, left: 50},
+    width2 = 960 - margin2.left - margin2.right,
+    height2 = 500 - margin2.top - margin2.bottom;
+
+/* 
+ * value accessor - returns the value to encode for a given data object.
+ * scale - maps value to a visual display encoding, such as a pixel position.
+ * map function - maps from data value to display value
+ * axis - sets up axis
+ */ 
+
+// setup x 
+const xValue2 = function(d) { return d.YEAR;}, // data -> value
+    xScale2 = d3.scale.linear().range([0, width2 - 100]), // value -> display
+    xMap2 = function(d) { return xScale2(xValue2(d));}, // data -> display
+    xAxis2 = d3.svg.axis().scale(xScale2).orient("bottom");
+
+// setup y
+const yValue2 = function(d) { return d["Age when Grand Slam won (years)"];}, // data -> value
+    yScale2 = d3.scale.linear().range([height2, 0]), // value -> display
+    yMap2 = function(d) { return yScale2(yValue2(d));}, // data -> display
+    yAxis2 = d3.svg.axis().scale(yScale2).orient("left");
+
+// setup fill color2
+const cValue2 = function(d) { return d.WINNER;},
+    color2 = d3.scale.category20();
+
+// add the graph canvas to the body of the webpage
+const svg2 = d3.select("body").append("svg")
+    .attr("width", width2 + margin2.left + margin2.right)
+    .attr("height", height2 + margin2.top + margin2.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+// add the tooltip area to the webpage
+
+const tooltip2 = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+
+// load data
+d3.csv("tennis_girls.csv", function(error, data) {
+
+  console.log(data, " is data!! Line 55");
+
+  // change string (from CSV) into number format
+  data.forEach(function(d) {
+    d.YEAR = +d.YEAR;
+    d["Age when Grand Slam won (years)"] = +d["Age when Grand Slam won (years)"];
+//    console.log(d);
+  });
+
+  // don't want dots overlapping axis, so add in buffer to data domain
+  xScale2.domain([d3.min(data, xValue2)-1, d3.max(data, xValue2)+1]);
+  yScale2.domain([d3.min(data, yValue2)-1, d3.max(data, yValue2)+1]);
+
+  // x-axis
+  svg2.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height2 + ")")
+      .call(xAxis2)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width2 - 100)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("YEAR");
+
+  // y-axis
+  svg2.append("g")
+      .attr("class", "y axis")
+      .call(yAxis2)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Age when Grand Slam won (years)");
+
+  // draw dots
+  svg2.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 3.5)
+      .attr("cx", xMap2)
+      .attr("cy", yMap2)
+      .style("fill", function(d) { return color2(cValue2(d));})
+      .on("mouseover", function(d) {
+
+          tooltip2.transition()
+               .duration(200)
+               .style("opacity", .9);
+          tooltip2.html(d["WINNER"] + "<br/> (" + xValue2(d) 
+	        + ", " + yValue2(d) + ")")
+               .style("left", (d3.event.pageX + 5) + "px")
+               .style("top", (d3.event.pageY - 28) + "px");
+      })
+      .on("mouseout", function(d) {
+          tooltip2.transition()
+               .duration(500)
+               .style("opacity", 0);
+      });
+
+  // draw legend
+  const legend2 = svg2.selectAll(".legend2")
+      .data(color2.domain())
+    .enter().append("g")
+      .attr("class", "2")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  // draw legend colored rectangles
+  legend2.append("rect")
+      .attr("x", width2 - 90)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color2);
+
+  // draw legend text
+  legend2.append("text")
+      .attr("x", width2 - 70)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "start")
+      .text(function(d) { return d;})
+});
+
+</script>
